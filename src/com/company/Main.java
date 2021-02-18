@@ -210,8 +210,8 @@ public class Main {
             }
 
         } catch (Exception e) {
-            System.out.println("Please Follow the input rule with one character and number of movement \n " +
-                    "e.g. <Commoand> + <Number>");
+            System.out.println("Please Follow the input rule with one character and valid number of movement \n " +
+                    "e.g. <Command> + <Number>");
 
         }
 
