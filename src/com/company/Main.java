@@ -4,7 +4,13 @@ import java.util.Scanner;
 
 public class Main {
 
-    Boolean safari;//this attribute will give the guide, either move up down or left right
+
+    private static Boolean positive=true;
+    private static Boolean safari=false;//this attribute will give the guide, either move up down or left right
+    private  static Integer moveUnit=0;// the number of unit in movement
+
+    private static Integer turn=0;// the incremental number of turn around
+    private static Integer quadrant;// the initial robot is facing to the east
 
     public static void main(String[] args) {
 	// write your code here
@@ -19,33 +25,64 @@ public class Main {
                 "* `L1` - turn left 90 degrees");
 
         String move=n.nextLine(); //take user input
-        String array[] = inputValidate(move);//split user input by common and trim the spaces
-
+        String[] array = inputValidate(move);//split user input by common and trim the spaces
 
         int moveX = 0, moveY = 0;
-        int x = 1, y = 1;
+        quadrant=0;
         //assume the movement is located in the x-axis and y-axis movement
         //indicate the movement by (x,y)
         //indicate every turn around by L or R, the quadrant would change also
+        boolean play=true;
+        while(play) {
+            for (String s : array) {
 
-        for(int i=0; i<array.length;i++){
+                System.out.println(s.trim());
+                inputMovement(s.trim());
+                if (safari && positive) {
+                    moveY += moveUnit;
+                }
+                if (safari && !positive) {
+                    moveY -= moveUnit;
+                }
+                if (!safari && positive) {
+                    moveX += moveUnit;
+                }
+                if (!safari && !positive) {
+                    moveX -= moveUnit;
+                }
+                //here is to calculate the x and y position by taking user input
+            }
 
-            Integer quadrant[]=inputMovement(array[i]);
-            x=quadrant[0];
-            y=quadrant[0];
+            if (moveX == 0 && moveY == 0) {
+                System.out.println("Success, You've returned to the start point");
+                play=false;
+            } else {
+                System.out.println("moveX: " + moveX + ", moveY: " + moveY);
+                System.out.println("Not yet, You left a few steps to return start point");
+                System.out.println("Enter Y to continue, enter other to quit the game");
+                String decision=n.nextLine();
+                if(decision.equals("Y")){
+                    play=true;
+                    System.out.println("Now you can enter the series of movement, For example \n " +
+                            "* `F1` - move forward 1 unit\n" +
+                            "* `B1` - move backward 1 unit\n" +
+                            "* `R1` - turn right 90 degrees\n" +
+                            "* `L1` - turn left 90 degrees");
+                     move=n.nextLine(); //take user input
+                    array= inputValidate(move);//split user input by common and trim the spaces
 
-
-            System.out.println(inputMovement(array[i])[1]);
-
-
-            //here is to calculate the x and y position by taking user input
+                }
+                else {
+                    play=false;
+                }
+            }
         }
 
     }
 
-    public void setSafari(Boolean safari)
+    public static void setSafari(Boolean safari1)
     {
-        this.safari=safari;
+        safari=safari1;
 
     }
     public Boolean getSafari()
@@ -54,47 +91,103 @@ public class Main {
 
     }
 
+    public Boolean getPositive() {
+        return positive;
+    }
+
+    public static void setPositive(Boolean positive1) {
+        positive = positive1;
+    }
+
+    public Integer getMoveUnit() {
+        return moveUnit;
+    }
+
+    public static void setMoveUnit(Integer moveUnit1) {
+        moveUnit = moveUnit1;
+    }
+    public static Integer getQuadrant() {
+        return quadrant;
+    }
+
+    public static void setQuadrant(Integer quadrant) {
+        Main.quadrant = quadrant;
+    }
+
+    public static Integer getTurn() {
+        return turn;
+    }
+
+    public static void setTurn(Integer turn) {
+        Main.turn = turn;
+    }
+
     /**
      *
-     * @param moveInput
+     * @param input
      * @return
      */
-    public static String[] inputValidate(String moveInput){
+    public static String[] inputValidate(String input){
 
-        String array[]=moveInput.trim().split(",");
-        return array;
+       String moveInput=input.toUpperCase();
+        return moveInput.trim().split(",");
     }
-    public static Integer[] inputMovement(String movement)
+
+    /**
+     * this method input the split command with number
+     * count the number by its direction
+     * @param movement
+     */
+    public static void inputMovement(String movement) throws NumberFormatException
     {
-        Integer x[]={0,0};
+try {
+    if (movement.contains("L") || movement.contains("l")) {
+        Integer direction = Integer.parseInt(
+                movement.substring(1)) % 4;
+        quadrant += direction;
+        inputTurn(quadrant);
+        setMoveUnit(0);
+        System.out.println("Robot received the command and turn over 90 degrees from LEFT " + Integer.parseInt(
+                movement.substring(1))+" times");
 
-        if(movement.contains("L") ||movement.contains("l") ){
-           Integer direction= Integer.parseInt(
-                    movement.substring(1)) % 4;
+    }
+    if (movement.contains("R") || movement.contains("r")) {
+        Integer direction = Integer.parseInt(
+                movement.substring(1)) % 4;
+        quadrant = Math.abs(quadrant - direction);
+        setMoveUnit(0);
+        inputTurnRight(quadrant);
+        System.out.println("Robot received the command and turn over 90 degrees from RIGHT " + Integer.parseInt(
+                movement.substring(1))+" times");
+    }
+    if (movement.contains("F") || movement.contains("f")) {
 
-            return inputTurn(direction);
-        }
-        if(movement.contains("R") ||movement.contains("r") ){
-            Integer direction=  Integer.parseInt(
-                    movement.substring(1)) % 4;
+        setMoveUnit(Integer.parseInt(
+                movement.substring(1)));
+        System.out.println("Robot received the command and moved FORWARD " + Integer.parseInt(
+                movement.substring(1))+" unit(s)");
 
-            return inputTurnRight(direction);
-        }
-        if(movement.contains("F") ||movement.contains("f") ){
-            Integer direction= Integer.parseInt(
-                    movement.substring(1)) % 4;
+    }
+    if (movement.contains("B") || movement.contains("b")) {
 
-            return inputTurn(direction);
-        }
-        if(movement.contains("R") ||movement.contains("r") ){
-            Integer direction=  Integer.parseInt(
-                    movement.substring(1)) % 4;
+        setMoveUnit(-Integer.parseInt(
+                movement.substring(1)));
+        System.out.println("Robot received the command and moved BACKWARD  " + Integer.parseInt(
+                movement.substring(1))+" unit(s)");
+    } else if (!movement.contains("B") && !movement.contains("L") && !movement.contains("F") && !movement.contains("R")) {
+        System.out.println("Your Robot cannot follow your instruction");
+        System.out.println("Please follow the rule to enter commands follow by rules, for example \n" +
+                " * `F1` - move forward 1 unit\n" +
+                "* `B1` - move backward 1 unit\n" +
+                "* `R1` - turn right 90 degrees\n" +
+                "* `L1` - turn left 90 degrees");
+    }
 
-            return inputTurnRight(direction);
-        }
+}catch (Exception e){
+    System.out.println("Please Follow the input rule with one character and number of movement \n " +
+            "e.g. <Commoand> + <Number>");
 
-
-        return x;
+}
 
     }
 
@@ -103,65 +196,58 @@ public class Main {
      * @param direction
      * this method give input of no of turn left
      * assume the initial position is faced to the 0+ x-axis
-     * @return
      */
-    public static Integer[] inputTurn(Integer direction){
+    public static void inputTurn(Integer direction){
 
-        Integer x[]={0,0};
+
         //turn left
         if(direction==1){
-             x[0]=1;
-            x[1]=1;//turn once from quadrant 1 x-axis to y-axis, forward is positive
-            return x;
+            setPositive(true);//face to y-axis, forward is 0+
+            setSafari(true);
+            return;
         }
         if(direction==2){
-            x[0]=-1;
-            x[1]=1;//turn once from y-axis to quadrant 2 x-axis, forward is negative
-            return x;
+            setPositive(false);//face to x-axis, forward is 0-
+            setSafari(false);
+            return;
         }
         if(direction==3){
-            x[1]=-1;
-            x[0]=1;//turn once from quadrant 2 x-axis to 3 quadrant y-axis, forward is negative
-            return x;
+            setPositive(false); //face to y-axis, forward is 0-
+            setSafari(true);
+            return;
         }
         if(direction==4){
-            x[0]=1;
-            x[1]=1;//turn once from quadrant 3 y-axis to 1 x-axis, forward is positive
-            return x;
+            setPositive(true);//face to x-axis, forward is 0+
+            setSafari(false);
         }
-        return x;
     }
 
     /**
      *
      * @param direction
      * this method give the input of no of turn right
-     * @return
      */
-    public static Integer[] inputTurnRight(Integer direction){
+    public static void inputTurnRight(Integer direction){
 
-        Integer x[]={0,0};
         //turn right
         if(direction==1){
-            x[1]=-1;
-            x[0]=1;//face to y-axis, forward is 0-
-            return x;
+            setPositive(false); //face to y-axis, forward is 0-
+            setSafari(true);
+            return;
         }
         if(direction==2){
-            x[0]=-1;
-            x[1]=1;//face to x-axis, forward is 0-
-            return x;
+            setPositive(false);//face to x-axis, forward is 0-
+            setSafari(false);
+            return;
         }
         if(direction==3){
-            x[0]=1;
-            x[1]=1;//face to y-axis, forward is 0+
-            return x;
+            setPositive(true);//face to y-axis, forward is 0+
+            setSafari(true);
+            return;
         }
         if(direction==4){
-            x[0]=1;
-            x[1]=1;//face to x-axis, forward is 0+
-            return x;
+            setPositive(true);//face to x-axis, forward is 0+
+            setSafari(false);
         }
-        return x;
     }
 }
