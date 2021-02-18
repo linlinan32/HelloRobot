@@ -20,7 +20,7 @@ The user input tested null, valid, incorrect format command, and this applicatio
 
 ##Idea of Design this app
 This CLI application uses Java programming language and IntelliJ IDE. 
-This app able to start by running the application, and use only need to type in the user input in console window to start the game. 
+This app able to start by running the application, and use only need to type in the user input in console window to start the game.  Or use Java CLI command in terminal to strat the application.
 This application able to give the clear instructions for user to follow.
 During the process of design and program this app, I put the robot into the starting point and move along or over the x-axis and y-axis. 
 Becasue the robot is in the start point and need to varify the initial direction, therefore set the robot face to east in default. 
