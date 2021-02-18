@@ -16,7 +16,7 @@ public class Main {
         Scanner n = new Scanner(System.in);
         System.out.println("*********************************************");
         System.out.println("Welcome to Robot Game");
-        System.out.println("Here is your Robot");
+        System.out.println("Here is your Robot, now it is facing to the EAST");
         System.out.println("You need to move to play the game, the robot can only turn 90 degrees at a time, so it cannot go directly back home.\n" +
                 "It must go in north, south, east, west directions. You can move by having commands F, B, R, L, and number of units");
         System.out.println(" For example, L1, F1, R1, B1...\n " +
