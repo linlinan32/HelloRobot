@@ -3,7 +3,7 @@
 Hello Robot is a CLI application to parse commands and display the result.
 These commands will tell the robot to go forwards or backward and turn left or right.  
 These commands will be in the format <command><number>. 
-Assume this Robot worked as he is in the graph, it default faces to the east. 
+Assume this Robot worked as he is in the graph, it default faces to the `east`. 
 
 ### Available commands:
 * `F` - move forward 1 unit
