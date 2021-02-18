@@ -18,7 +18,7 @@ Test this app by unit testing method, black-box, white-box testing methods, and 
 Tested this app by valid/invalid user input and to see the output and any exception. 
 The user input tested null, valid, incorrect format command, and this application able to catch the error and give user feedbacks ablut next step when meet the errors and exception. 
 
-##Idea of Design this app
+## Idea of Design this app
 This CLI application uses Java programming language and IntelliJ IDE. 
 This app able to start by running the application, and use only need to type in the user input in console window to start the game.  Or use Java CLI command in terminal to strat the application.
 This application able to give the clear instructions for user to follow.
