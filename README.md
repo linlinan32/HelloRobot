@@ -21,3 +21,6 @@ The user input tested null, valid, incorrect format command, and this applicatio
 Idea of Design this app
 During the process of design and program this app, I put the robot into the starting point and move along or over the x-axis and y-axis. 
 Becasue the robot is in the start point and need to varify the initial direction, therefore set the robot face to east in default. 
+
+
+Programed by Linan, git account names: Linlinan32 && llin0034. 
