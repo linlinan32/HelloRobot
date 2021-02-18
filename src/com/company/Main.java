@@ -5,88 +5,107 @@ import java.util.Scanner;
 public class Main {
 
 
-    private static Boolean positive=true;
-    private static Boolean safari=false;//this attribute will give the guide, either move up down or left right
-    private  static Integer moveUnit=0;// the number of unit in movement
-
-    private static Integer turn=0;// the incremental number of turn around
+    private static Boolean positive = true;
+    private static Boolean safari = false;//this attribute will give the guide, either move up down or left right
+    private static Integer moveUnit = 0;// the number of unit in movement
     private static Integer quadrant;// the initial robot is facing to the east
+    private static Integer moves=0;// this attribute makes sure the robot move not only turn around
 
     public static void main(String[] args) {
-	// write your code here
-        Scanner n=new Scanner(System.in);
-        System.out.println("**********************");
+        // write your code here
+        Scanner n = new Scanner(System.in);
+        System.out.println("*********************************************");
         System.out.println("Welcome to Robot Game");
-        System.out.println("here is your Robot X");
-        System.out.println("Now you can enter the series of movement, For example \n " +
+        System.out.println("Here is your Robot");
+        System.out.println("You need to move to play the game, the robot can only turn 90 degrees at a time, so it cannot go directly back home.\n" +
+                "It must go in north, south, east, west directions. You can move by having commands F, B, R, L, and number of units");
+        System.out.println(" For example, L1, F1, R1, B1...\n " +
                 "* `F1` - move forward 1 unit\n" +
                 "* `B1` - move backward 1 unit\n" +
                 "* `R1` - turn right 90 degrees\n" +
-                "* `L1` - turn left 90 degrees");
-
-        String move=n.nextLine(); //take user input
+                "* `L1` - turn left 90 degrees\n" +
+                "Now you can enter the series of movement, <command>+<number>"
+        );
+        String move = n.nextLine(); //take user input
         String[] array = inputValidate(move);//split user input by common and trim the spaces
 
         int moveX = 0, moveY = 0;
-        quadrant=0;
+        quadrant = 0;
         //assume the movement is located in the x-axis and y-axis movement
         //indicate the movement by (x,y)
         //indicate every turn around by L or R, the quadrant would change also
-        boolean play=true;
-        while(play) {
+        boolean play = true;//when play is true, game would keep going till user win or quit
+        while (play) {
+
+            if(move.isEmpty()){
+                System.out.println("You need to enter the series of movement, <command>+<number> to play this game"
+                        );
+                System.out.println("You can input now");
+                move = n.nextLine(); //take user input
+                array = inputValidate(move);//split user input by common and trim the spaces
+
+            }
+            else{
+            //looping the commands
             for (String s : array) {
 
                 System.out.println(s.trim());
                 inputMovement(s.trim());
                 if (safari && positive) {
-                    moveY += moveUnit;
+                    moveY += moveUnit;//face to the north and move forward
                 }
                 if (safari && !positive) {
-                    moveY -= moveUnit;
+                    moveY -= moveUnit;//face to the south and move forward
                 }
                 if (!safari && positive) {
-                    moveX += moveUnit;
+                    moveX += moveUnit;//face to the east and move forward
                 }
                 if (!safari && !positive) {
-                    moveX -= moveUnit;
+                    moveX -= moveUnit;//face to the east and move forward
                 }
-                //here is to calculate the x and y position by taking user input
+
             }
 
-            if (moveX == 0 && moveY == 0) {
+            if (moveX == 0 && moveY == 0 && moves!=0) {
+                //robot back to the start point
                 System.out.println("Success, You've returned to the start point");
-                play=false;
-            } else {
-                System.out.println("moveX: " + moveX + ", moveY: " + moveY);
+                System.out.println("*********************************************");
+                play = false;
+            }
+            if (moves==0){
+                System.out.println("Not yet, You need to start the game either move forward or backward, then return start point");
+                System.out.println("Now you can enter Robot's movements");
+                move = n.nextLine(); //take user input
+                array = inputValidate(move);//split user input by common and trim the spaces
+            }
+            else if(moveX != 0 || moveY != 0) {
                 System.out.println("Not yet, You left a few steps to return start point");
-                System.out.println("Enter Y to continue, enter other to quit the game");
-                String decision=n.nextLine();
-                if(decision.equals("Y")){
-                    play=true;
-                    System.out.println("Now you can enter the series of movement, For example \n " +
-                            "* `F1` - move forward 1 unit\n" +
-                            "* `B1` - move backward 1 unit\n" +
-                            "* `R1` - turn right 90 degrees\n" +
-                            "* `L1` - turn left 90 degrees");
-                     move=n.nextLine(); //take user input
-                    array= inputValidate(move);//split user input by common and trim the spaces
+                Integer minimum=Math.abs(moveX)+Math.abs(moveY);
+                System.out.println("the minimum amount of distance to get back to the starting point is "+minimum);
+                System.out.println("Enter Y/y to continue, enter others to quit the game");
+                String decision = n.nextLine().toUpperCase();
+                if (decision.equals("Y")) {
+
+                    System.out.println("Now you can enter the series of movement ");
+                    move = n.nextLine(); //take user input
+                    array = inputValidate(move);//split user input by common and trim the spaces
+
+                } else {
+                    play = false;
+                    System.out.println("*********************************************");
 
                 }
-                else {
-                    play=false;
-                }
-            }
+            }}
         }
 
     }
 
-    public static void setSafari(Boolean safari1)
-    {
-        safari=safari1;
+    public static void setSafari(Boolean safari1) {
+        safari = safari1;
 
     }
-    public Boolean getSafari()
-    {
+
+    public Boolean getSafari() {
         return safari;
 
     }
@@ -106,6 +125,7 @@ public class Main {
     public static void setMoveUnit(Integer moveUnit1) {
         moveUnit = moveUnit1;
     }
+
     public static Integer getQuadrant() {
         return quadrant;
     }
@@ -114,138 +134,140 @@ public class Main {
         Main.quadrant = quadrant;
     }
 
-    public static Integer getTurn() {
-        return turn;
+
+    public static Integer getMoves() {
+        return moves;
     }
 
-    public static void setTurn(Integer turn) {
-        Main.turn = turn;
+    public static void setMoves(Integer moves) {
+        Main.moves = moves;
     }
 
     /**
+     * this method is to split the user input String by ,
      *
      * @param input
      * @return
      */
-    public static String[] inputValidate(String input){
+    public static String[] inputValidate(String input) {
 
-       String moveInput=input.toUpperCase();
+        String moveInput = input.toUpperCase();
         return moveInput.trim().split(",");
+
     }
 
     /**
-     * this method input the split command with number
+     * this method input the split command and number
      * count the number by its direction
+     * define its movement units
+     * catch exception in case user not input the format of command and number
      * @param movement
      */
-    public static void inputMovement(String movement) throws NumberFormatException
-    {
-try {
-    if (movement.contains("L") || movement.contains("l")) {
-        Integer direction = Integer.parseInt(
-                movement.substring(1)) % 4;
-        quadrant += direction;
-        inputTurn(quadrant);
-        setMoveUnit(0);
-        System.out.println("Robot received the command and turn over 90 degrees from LEFT " + Integer.parseInt(
-                movement.substring(1))+" times");
+    public static void inputMovement(String movement) throws NumberFormatException {
+        try {
+            if (movement.contains("L") || movement.contains("l")) {
+                Integer direction = Integer.parseInt(
+                        movement.substring(1)) % 4;
+                quadrant += direction;
+                inputTurn(quadrant);
+                setMoveUnit(0);
+                System.out.println("Robot received the command and turn over 90 degrees from LEFT " + Integer.parseInt(
+                        movement.substring(1)) + " times");
 
-    }
-    if (movement.contains("R") || movement.contains("r")) {
-        Integer direction = Integer.parseInt(
-                movement.substring(1)) % 4;
-        quadrant = Math.abs(quadrant - direction);
-        setMoveUnit(0);
-        inputTurnRight(quadrant);
-        System.out.println("Robot received the command and turn over 90 degrees from RIGHT " + Integer.parseInt(
-                movement.substring(1))+" times");
-    }
-    if (movement.contains("F") || movement.contains("f")) {
+            }
+            if (movement.contains("R") || movement.contains("r")) {
+                Integer direction = Integer.parseInt(
+                        movement.substring(1)) % 4;
+                quadrant = Math.abs(quadrant - direction);
+                setMoveUnit(0);
+                inputTurnRight(quadrant);
+                System.out.println("Robot received the command and turn over 90 degrees from RIGHT " + Integer.parseInt(
+                        movement.substring(1)) + " times");
+            }
+            if (movement.contains("F") || movement.contains("f")) {
 
-        setMoveUnit(Integer.parseInt(
-                movement.substring(1)));
-        System.out.println("Robot received the command and moved FORWARD " + Integer.parseInt(
-                movement.substring(1))+" unit(s)");
+                setMoveUnit(Integer.parseInt(
+                        movement.substring(1)));
+                setMoves(100000);
+                System.out.println("Robot received the command and moved FORWARD " + Integer.parseInt(
+                        movement.substring(1)) + " unit(s)");
 
-    }
-    if (movement.contains("B") || movement.contains("b")) {
+            }
+            if (movement.contains("B") || movement.contains("b")) {
 
-        setMoveUnit(-Integer.parseInt(
-                movement.substring(1)));
-        System.out.println("Robot received the command and moved BACKWARD  " + Integer.parseInt(
-                movement.substring(1))+" unit(s)");
-    } else if (!movement.contains("B") && !movement.contains("L") && !movement.contains("F") && !movement.contains("R")) {
-        System.out.println("Your Robot cannot follow your instruction");
-        System.out.println("Please follow the rule to enter commands follow by rules, for example \n" +
-                " * `F1` - move forward 1 unit\n" +
-                "* `B1` - move backward 1 unit\n" +
-                "* `R1` - turn right 90 degrees\n" +
-                "* `L1` - turn left 90 degrees");
-    }
+                setMoveUnit(-Integer.parseInt(
+                        movement.substring(1)));
+                System.out.println("Robot received the command and moved BACKWARD  " + Integer.parseInt(
+                        movement.substring(1)) + " unit(s)");
+                setMoves(100000);
+            } else if (!movement.contains("B") && !movement.contains("L") && !movement.contains("F") && !movement.contains("R")) {
+                System.out.println("Your Robot cannot follow your instruction");
+                System.out.println("Please follow the rule to enter commands follow by rules, for example \n" +
+                        " * `F1` - move forward 1 unit\n" +
+                        "* `B1` - move backward 1 unit\n" +
+                        "* `R1` - turn right 90 degrees\n" +
+                        "* `L1` - turn left 90 degrees");
+            }
 
-}catch (Exception e){
-    System.out.println("Please Follow the input rule with one character and number of movement \n " +
-            "e.g. <Commoand> + <Number>");
+        } catch (Exception e) {
+            System.out.println("Please Follow the input rule with one character and number of movement \n " +
+                    "e.g. <Commoand> + <Number>");
 
-}
+        }
 
     }
 
     /**
-     *
-     * @param direction
-     * this method give input of no of turn left
-     * assume the initial position is faced to the 0+ x-axis
+     * @param direction this method give input of no of turn left
+     *                  assume the initial position is faced to the 0+ x-axis
      */
-    public static void inputTurn(Integer direction){
+    public static void inputTurn(Integer direction) {
 
 
         //turn left
-        if(direction==1){
+        if (direction == 1) {
             setPositive(true);//face to y-axis, forward is 0+
             setSafari(true);
             return;
         }
-        if(direction==2){
+        if (direction == 2) {
             setPositive(false);//face to x-axis, forward is 0-
             setSafari(false);
             return;
         }
-        if(direction==3){
+        if (direction == 3) {
             setPositive(false); //face to y-axis, forward is 0-
             setSafari(true);
             return;
         }
-        if(direction==4){
+        if (direction == 4) {
             setPositive(true);//face to x-axis, forward is 0+
             setSafari(false);
         }
     }
 
     /**
-     *
-     * @param direction
-     * this method give the input of no of turn right
+     * @param direction this method give the input of no of turn right
      */
-    public static void inputTurnRight(Integer direction){
+    public static void inputTurnRight(Integer direction) {
 
         //turn right
-        if(direction==1){
+        if (direction == 1) {
             setPositive(false); //face to y-axis, forward is 0-
             setSafari(true);
             return;
         }
-        if(direction==2){
+        if (direction == 2) {
             setPositive(false);//face to x-axis, forward is 0-
             setSafari(false);
             return;
         }
-        if(direction==3){
+        if (direction == 3) {
             setPositive(true);//face to y-axis, forward is 0+
             setSafari(true);
             return;
         }
-        if(direction==4){
+        if (direction == 4) {
             setPositive(true);//face to x-axis, forward is 0+
             setSafari(false);
         }
