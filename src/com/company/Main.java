@@ -80,7 +80,7 @@ public class Main {
             }
             else if(moveX != 0 || moveY != 0) {
                 System.out.println("Not yet, You left a few steps to return start point");
-                Integer minimum=Math.abs(moveX)+Math.abs(moveY);
+                Integer minimum=Math.abs(moveX)+Math.abs(moveY); //minimum unit equals to the x-axis units plus y-axis units
                 System.out.println("the minimum amount of distance to get back to the starting point is "+minimum);
                 System.out.println("Enter Y/y to continue, enter others to quit the game");
                 String decision = n.nextLine().toUpperCase();
@@ -167,28 +167,28 @@ public class Main {
         try {
             if (movement.contains("L") || movement.contains("l")) {
                 Integer direction = Integer.parseInt(
-                        movement.substring(1)) % 4;
-                quadrant += direction;
-                inputTurn(quadrant);
-                setMoveUnit(0);
+                        movement.substring(1)) % 4;//extract integer
+                quadrant += direction; //add the number of 90 degrees and
+                inputTurn(quadrant); // which way the robot would face
+                setMoveUnit(0);// set the Move unit is zero, L no need to move
                 System.out.println("Robot received the command and turn over 90 degrees from LEFT " + Integer.parseInt(
                         movement.substring(1)) + " times");
 
             }
             if (movement.contains("R") || movement.contains("r")) {
                 Integer direction = Integer.parseInt(
-                        movement.substring(1)) % 4;
-                quadrant = Math.abs(quadrant - direction);
-                setMoveUnit(0);
-                inputTurnRight(quadrant);
+                        movement.substring(1)) % 4;//extract integer
+                quadrant = Math.abs(quadrant - direction); //add the number of 90 degrees and
+                setMoveUnit(0); // set the Move unit is zero, L no need to move
+                inputTurnRight(quadrant);  // which way the robot would face
                 System.out.println("Robot received the command and turn over 90 degrees from RIGHT " + Integer.parseInt(
                         movement.substring(1)) + " times");
             }
             if (movement.contains("F") || movement.contains("f")) {
 
                 setMoveUnit(Integer.parseInt(
-                        movement.substring(1)));
-                setMoves(100000);
+                        movement.substring(1)));//extract integer, moving positive unit
+                setMoves(100000); //move is 100000 if the robot is moving
                 System.out.println("Robot received the command and moved FORWARD " + Integer.parseInt(
                         movement.substring(1)) + " unit(s)");
 
@@ -196,10 +196,10 @@ public class Main {
             if (movement.contains("B") || movement.contains("b")) {
 
                 setMoveUnit(-Integer.parseInt(
-                        movement.substring(1)));
+                        movement.substring(1))); //extract integer, moving negative unit
                 System.out.println("Robot received the command and moved BACKWARD  " + Integer.parseInt(
                         movement.substring(1)) + " unit(s)");
-                setMoves(100000);
+                setMoves(100000); //move is 100000 if the robot is moving
             } else if (!movement.contains("B") && !movement.contains("L") && !movement.contains("F") && !movement.contains("R")) {
                 System.out.println("Your Robot cannot follow your instruction");
                 System.out.println("Please follow the rule to enter commands follow by rules, for example \n" +
